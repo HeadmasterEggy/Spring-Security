@@ -7,6 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="spring-security01-helloworld" />
+        <module name="spring-security03-server" />
+        <module name="spring-security05-auth" />
         <module name="spring-security02-login-page" />
       </profile>
     </annotationProcessing>
@@ -15,6 +17,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="spring-security01-helloworld" options="-parameters" />
       <module name="spring-security02-login-page" options="-parameters" />
+      <module name="spring-security03-server" options="-parameters" />
+      <module name="spring-security05-auth" options="-parameters" />
     </option>
   </component>
 </project>

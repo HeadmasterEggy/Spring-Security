@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/spring-security01-helloworld/pom.xml" />
         <option value="$PROJECT_DIR$/spring-security02-login-page/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-security03-server/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-security05-auth/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />

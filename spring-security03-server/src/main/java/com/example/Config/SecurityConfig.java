@@ -26,22 +26,35 @@ public class SecurityConfig {
         );
 
         // http:后面可以一直点 但是太多内容之后不美观
-        // loginPage:登录页面
-        // loginProcessingUrl:登录接口 过滤器
-        // defaultSuccessUrl:登录成功后访问的页面
+        // loginProcessingUrl:指定登录接口
+        // successHandler: 登录成功处理器
+        // failureHandler: 登录失败处理器
         http.formLogin(formLogin ->
                 formLogin
-                        .loginPage("/login").permitAll()
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/index")
+                        .loginProcessingUrl("/login").permitAll()
+                        .successHandler((request, response, authentication) -> {
+                            response.setContentType("text/html;charset=UTF-8");
+                            response.getWriter().write("loginOK");
+
+                            System.out.println("authentication.getCredentials() = " + authentication.getCredentials());
+                            System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
+                            System.out.println("authentication.getAuthorities() = " + authentication.getAuthorities());
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            response.setContentType("text/html;charset=UTF-8");
+                            response.getWriter().write("loginERROR");
+                            System.out.println("登录信息异常");
+                            exception.printStackTrace();
+                        })
         );
 
         // Customizer.withDefaults(): 关闭
         // http.csrf(csrf -> csrf.disable());
         http.csrf(Customizer.withDefaults());   //跨域漏洞防御
 
-        // 退出
-        http.logout(logout -> logout.invalidateHttpSession(true));
+        //跨域拦截关闭
+        http.cors(Customizer.withDefaults());
+
 
         return http.build();
     }
