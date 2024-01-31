@@ -20,6 +20,6 @@
 
 1、配置角色/权限\
 2、将用户存储到内存中\
-/admin/api:需要admin角色访问\
-/user/api:需要user角色访问\
-/app/api:匿名可以访问
+`/admin/api`: 需要admin角色访问\
+`/user/api`: 需要user角色访问\
+`/app/api`: 匿名可以访问

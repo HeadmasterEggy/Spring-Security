@@ -1,5 +1,6 @@
 package com.example.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -7,14 +8,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @EnableWebSecurity  //开启SpringSecurity 之后会默认注册大量的过滤器servlet filter
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    DataSource datasource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,12 +34,12 @@ public class SecurityConfig {
                         authorizeHttpRequests
 
                                 /* 角色 */
-//                        .requestMatchers("/admin/api").hasRole("admin")//必须有admin角色才能访问到
-//                        .requestMatchers("/user/api").hasAnyRole("admin", "user")// /user/api:admin、user都是可以访问
+                                .requestMatchers("/admin/api").hasRole("admin")//必须有admin角色才能访问到
+                                .requestMatchers("/user/api").hasAnyRole("admin", "user")// /user/api:admin、user都是可以访问
 
                                 /* 权限 */
-                                .requestMatchers("/admin/api").hasAuthority("admin:api")//必须有admin:api权限才能访问到
-                                .requestMatchers("/user/api").hasAnyAuthority("admin:api", "user:api")// 有admin:api, user:api权限可以访问
+//                                .requestMatchers("/admin/api").hasAuthority("admin:api")//必须有admin:api权限才能访问到
+//                                .requestMatchers("/user/api").hasAnyAuthority("admin:api", "user:api")// 有admin:api, user:api权限可以访问
 
                                 /* 匹配模式 */
                                 .requestMatchers("/admin/api/?").hasAuthority("admin:api")//必须有admin:api权限才能访问到
@@ -69,15 +76,27 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
+    public UserDetailsService userDetailsService() {
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager();
+        userDetailsManager.setDataSource(datasource);
+
+
         // admin用户具有admin, user角色
-        // UserDetails user1 = User.withUsername("admin").password("admin").roles("admin").build();
-        // UserDetails user2 = User.withUsername("user").password("user").roles("user").build();
-        UserDetails user1 = User.withUsername("admin").password("admin").authorities("admin:api", "user:api").build();
-        UserDetails user2 = User.withUsername("user").password("user").authorities("user:api").build();
-        return new InMemoryUserDetailsManager(user1, user2);
+         UserDetails user1 = User.withUsername("admin").password("admin").roles("admin").build();
+         UserDetails user2 = User.withUsername("user").password("user").roles("user").build();
+
+//        UserDetails user1 = User.withUsername("admin").password("admin").authorities("admin:api", "user:api").build();
+//        UserDetails user2 = User.withUsername("user").password("user").authorities("user:api").build();
+
+        //在表中创建用户信息
+        if (!userDetailsManager.userExists("admin") && !userDetailsManager.userExists("user")) {
+            userDetailsManager.createUser(user1);
+            userDetailsManager.createUser(user2);
+        }
+
+
+        return userDetailsManager;
     }
 
     /**

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-security01-helloworld" />
         <module name="spring-security03-server" />
+        <module name="spring-security06-spring-jdbc" />
         <module name="spring-security05-auth" />
         <module name="spring-security02-login-page" />
       </profile>
@@ -19,6 +20,7 @@
       <module name="spring-security02-login-page" options="-parameters" />
       <module name="spring-security03-server" options="-parameters" />
       <module name="spring-security05-auth" options="-parameters" />
+      <module name="spring-security06-spring-jdbc" options="-parameters" />
     </option>
   </component>
 </project>
