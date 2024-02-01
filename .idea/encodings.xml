@@ -6,5 +6,6 @@
     <file url="file://$PROJECT_DIR$/spring-security03-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-security05-auth/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-security06-spring-jdbc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-security07-mybatis-plus/src/main/java" charset="UTF-8" />
   </component>
 </project>
