@@ -1,16 +1,23 @@
 package com.example.Config;
 
+import com.example.Filter.LoginFilter;
+import com.example.security.LoginFailureHandler;
+import com.example.security.LoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity  //开启SpringSecurity 之后会默认注册大量的过滤器servlet filter
 @Configuration
@@ -55,8 +62,12 @@ public class SecurityConfig {
                 formLogin
                         .loginPage("/login").permitAll()
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/index")
+//                        .defaultSuccessUrl("/index")
         );
+
+        //配置自定义登录过滤器
+        //将 UsernamePasswordAuthenticationFilter 替换掉
+        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // Customizer.withDefaults(): 关闭
         // http.csrf(csrf -> csrf.disable());
@@ -71,6 +82,17 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Autowired
+    AuthenticationConfiguration authenticationConfiguration;
+
+    @Bean
+    public LoginFilter loginFilter() throws Exception {
+        LoginFilter loginFilter = new LoginFilter();
+        loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
+        loginFilter.setAuthenticationFailureHandler(new LoginFailureHandler());
+        loginFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
+        return loginFilter;
+    }
 
 
 
@@ -80,6 +102,6 @@ public class SecurityConfig {
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

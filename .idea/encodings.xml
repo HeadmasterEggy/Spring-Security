@@ -9,5 +9,6 @@
     <file url="file://$PROJECT_DIR$/spring-security07-mybatis-plus/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-security08-login-filter/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-security09-exception-login-failure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-security10-exception-auth/src/main/java" charset="UTF-8" />
   </component>
 </project>

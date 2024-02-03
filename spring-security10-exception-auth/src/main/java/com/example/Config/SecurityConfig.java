@@ -1,15 +1,21 @@
 package com.example.Config;
 
-import com.example.Filter.LoginFilter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
+import java.io.IOException;
 
 @EnableWebSecurity  //开启SpringSecurity 之后会默认注册大量的过滤器servlet filter
 @Configuration
@@ -53,8 +59,14 @@ public class SecurityConfig {
         );
 
         //现在我们借助异常处理配置一个未授权页面: 实际上是不合理的 我们应该捕获异常信息 通过异常类型来判断是什么异常
-        http.exceptionHandling(e -> e.accessDeniedPage("/noAuth"));
-
+        //http.exceptionHandling(e -> e.accessDeniedPage("/noAuth"));
+        http.exceptionHandling(e -> e.accessDeniedHandler(new AccessDeniedHandler() {
+            @Override
+            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                System.out.println("accessDeniedException = " + accessDeniedException);
+                accessDeniedException.printStackTrace();
+            }
+        }));
         // http:后面可以一直点 但是太多内容之后不美观
         // loginPage:登录页面
         // loginProcessingUrl:登录接口 过滤器

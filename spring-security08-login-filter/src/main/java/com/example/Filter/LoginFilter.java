@@ -11,18 +11,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@Component
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Override
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        super.setAuthenticationManager(authenticationManager);
-    }
+
 
     @SneakyThrows
     @Override
@@ -49,4 +44,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         return JSONUtil.parseObj(stringBuffer.toString()).toBean(User.class);
     }
+
 }
