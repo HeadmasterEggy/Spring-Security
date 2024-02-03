@@ -1,28 +1,20 @@
 package com.example.Config;
 
-import com.example.Filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity  //开启SpringSecurity 之后会默认注册大量的过滤器servlet filter
 @Configuration
 public class SecurityConfig {
-
-    /**
-     * PasswordEncoder:加密编码
-     * 实际开发中开发环境一般是明文加密 在生产环境中是密文加密 也就可以可以配置多种加密方式
-     */
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -66,13 +58,12 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/index")
         );
 
-        //配置自定义登录过滤器
-        //将 UsernamePasswordAuthenticationFilter 替换掉
-        http.addFilterAt(new LoginFilter(), UsernamePasswordAuthenticationFilter.class);
-
         // Customizer.withDefaults(): 关闭
         // http.csrf(csrf -> csrf.disable());
         http.csrf(Customizer.withDefaults());   //跨域漏洞防御
+
+        // 关闭跨域
+        http.cors(Customizer.withDefaults());
 
         // 退出
         http.logout(logout -> logout.invalidateHttpSession(true));
@@ -81,4 +72,14 @@ public class SecurityConfig {
     }
 
 
+
+
+    /**
+     * PasswordEncoder:加密编码
+     * 实际开发中开发环境一般是明文加密 在生产环境中是密文加密 也就可以可以配置多种加密方式
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
 }

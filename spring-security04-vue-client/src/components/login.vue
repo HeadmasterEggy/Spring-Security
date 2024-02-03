@@ -13,7 +13,7 @@ function doLogin() {
     url: '/api/login',
     data: {username: username.value, password: password.value},
     method: 'post',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    // headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   }
 
   axios(options).then((res) => {

@@ -10,6 +10,8 @@
         <option value="$PROJECT_DIR$/spring-security05-auth/pom.xml" />
         <option value="$PROJECT_DIR$/spring-security06-spring-jdbc/pom.xml" />
         <option value="$PROJECT_DIR$/spring-security07-mybatis-plus/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-security09-exception-login-failure/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-security08-login-filter/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
